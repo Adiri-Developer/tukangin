@@ -104,4 +104,83 @@ model Booking {
   
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
+
+  agreement         Agreement?
+  payment           Payment?
+  review            Review?
+}
+
+enum AgreementStatus {
+  DRAFT
+  AGREED
+  REJECTED
+}
+
+model Agreement {
+  id              String          @id @default(cuid())
+  bookingId       String          @unique
+  booking         Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  scopeOfWork     String?
+  serviceFee      Float?
+  materialCost    Float?
+  estimatedDays   Int?
+  
+  status          AgreementStatus @default(DRAFT)
+  agreedAt        DateTime?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  HELD_IN_ESCROW
+  RELEASED
+  REFUNDED
+}
+
+model Payment {
+  id              String          @id @default(cuid())
+  bookingId       String          @unique
+  booking         Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  amount          Float
+  paymentMethod   String?
+  status          PaymentStatus   @default(PENDING)
+  
+  paidAt          DateTime?
+  releasedAt      DateTime?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model PortfolioProject {
+  id                String          @id @default(cuid())
+  providerProfileId String
+  providerProfile   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  
+  title             String
+  description       String?
+  imageUrl          String?
+  
+  createdAt         DateTime        @default(now())
+}
+
+model Review {
+  id                String          @id @default(cuid())
+  bookingId         String          @unique
+  booking           Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  providerProfileId String
+  providerProfile   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  
+  customerId        String
+  customer          User            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  rating            Int             // 1-5
+  comment           String?
+  
+  createdAt         DateTime        @default(now())
 }

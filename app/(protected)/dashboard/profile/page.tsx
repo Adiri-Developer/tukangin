@@ -15,7 +15,14 @@ export default async function ProfilePage() {
     include: { providerProfile: true, customerProfile: true }
   })
 
-  if (!user) return null
+  if (!user) {
+    return (
+      <div className="p-8 text-center bg-white border border-[#FCA5A5] rounded-[16px]">
+        <p className="text-[#B91C1C] font-semibold mb-2">Sesi Tidak Valid / Akun Tidak Ditemukan</p>
+        <p className="text-[#64748B]">Database baru saja di-reset. Akun lama Anda mungkin telah terhapus. Silakan klik tombol <b>Keluar Akun</b> di bagian bawah layar dan buat akun baru.</p>
+      </div>
+    )
+  }
 
   const isProvider = user.role === 'PROVIDER'
   const profile = isProvider ? user.providerProfile : user.customerProfile
