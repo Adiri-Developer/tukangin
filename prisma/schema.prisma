@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(CUSTOMER)
+  
+  customerProfile CustomerProfile?
+  providerProfile ProviderProfile?
+  
+  bookingsAsCustomer Booking[] @relation("CustomerBookings")
+  bookingsAsProvider Booking[] @relation("ProviderBookings")
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model CustomerProfile {
+  id      String @id @default(cuid())
+  userId  String @unique
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone   String?
+  address String?
+}
+
+model ProviderProfile {
+  id             String  @id @default(cuid())
+  userId         String  @unique
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone          String?
+  address        String?
+  businessName   String?
+  description    String?
+  experience     Int?
+  
+  isVerified     Boolean @default(false)
+  ktpNumber      String?
+  ktpImage       String?
+  faceImage      String?
+  
+  services       ProviderService[]
+}
+
+model ServiceCategory {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  providers   ProviderService[]
+  bookings    Booking[]
+}
+
+model ProviderService {
+  id                String          @id @default(cuid())
+  providerProfileId String
+  providerProfile   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  serviceCategoryId String
+  serviceCategory   ServiceCategory @relation(fields: [serviceCategoryId], references: [id], onDelete: Cascade)
+  
+  price             Float?
+}
+
+model Booking {
+  id                String          @id @default(cuid())
+  customerId        String
+  customer          User            @relation("CustomerBookings", fields: [customerId], references: [id])
+  providerId        String
+  provider          User            @relation("ProviderBookings", fields: [providerId], references: [id])
+  serviceCategoryId String
+  serviceCategory   ServiceCategory @relation(fields: [serviceCategoryId], references: [id])
+  
+  status            BookingStatus   @default(PENDING)
+  scheduledAt       DateTime?
+  description       String?
+  address           String?
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
