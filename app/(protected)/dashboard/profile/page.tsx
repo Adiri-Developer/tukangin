@@ -57,7 +57,10 @@ export default async function ProfilePage() {
         </CardContent>
       </Card>
 
-      <form action={updateProfile}>
+      <form action={async (formData) => {
+        'use server'
+        await updateProfile(formData)
+      }}>
         <Card className="border-[#E2E8F0] rounded-[16px] shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] bg-white overflow-hidden">
           <CardHeader className="bg-slate-50 border-b border-[#E2E8F0]">
             <CardTitle className="text-lg font-bold text-[#0F172A]">Data Profil</CardTitle>
@@ -97,7 +100,10 @@ export default async function ProfilePage() {
       </form>
 
       {isProvider && (
-        <form action={requestVerification}>
+        <form action={async (formData) => {
+          'use server'
+          await requestVerification(formData)
+        }}>
           <Card className={`border-[#E2E8F0] rounded-[16px] shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] bg-white overflow-hidden transition-all ${user.providerProfile?.isVerified ? 'border-[#6EE7B7]' : ''}`}>
             <CardHeader className={`border-b ${user.providerProfile?.isVerified ? 'bg-[#ECFDF5] border-[#6EE7B7]' : 'bg-slate-50 border-[#E2E8F0]'}`}>
               <div className="flex items-center gap-3">

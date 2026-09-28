@@ -1,8 +1,8 @@
 import { db } from '@/lib/db'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle2, Search, Star, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckCircle2, Search, Star, ShieldCheck } from 'lucide-react'
 
 export default async function CategoryProvidersPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -13,7 +13,13 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
       providers: {
         include: {
           providerProfile: {
-            include: { user: true }
+            include: {
+              user: true,
+              _count: { select: { portfolioProjects: true } },
+              reviews: {
+                select: { rating: true },
+              },
+            }
           }
         }
       }
@@ -45,16 +51,22 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
   if (displayProviders.length === 0) {
     const fallbackProviders = await db.providerProfile.findMany({
       where: { isVerified: true },
-      include: { user: true }
+      include: {
+        user: true,
+        _count: { select: { portfolioProjects: true } },
+        reviews: {
+          select: { rating: true },
+        },
+      }
     })
     
     displayProviders = fallbackProviders.map(p => ({
       id: 'mock-service-id',
       providerProfileId: p.id,
       serviceCategoryId: id,
-      price: 150000,
+      price: null,
       providerProfile: p
-    })) as any[]
+    }))
   }
 
   return (
@@ -78,40 +90,62 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
           </div>
         ) : (
           <div className="space-y-4">
-            {displayProviders.map((svc) => (
+            {displayProviders.map((svc) => {
+              const reviewCount = svc.providerProfile.reviews.length
+              const averageRating = reviewCount > 0
+                ? svc.providerProfile.reviews.reduce((total, review) => total + review.rating, 0) / reviewCount
+                : null
+
+              return (
               <Card key={svc.providerProfile.id} className="border-[#E2E8F0] rounded-[16px] bg-white overflow-hidden shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] hover:-translate-y-1 hover:shadow-md hover:border-[#CBD5E1] transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-                    <div className="w-16 h-16 bg-[#F8FAFC] border-[1.5px] border-[#E2E8F0] rounded-full flex items-center justify-center flex-shrink-0 relative">
-                      <span className="text-2xl text-[#64748B] font-bold">
-                        {svc.providerProfile.user.name?.charAt(0) || 'T'}
-                      </span>
-                      <div className="absolute -bottom-1 -right-1 bg-[#10B981] w-6 h-6 rounded-full border-2 border-white flex items-center justify-center text-white">
-                        <ShieldCheck className="w-3.5 h-3.5" />
+                    <Link
+                      href={`/services/${category.id}/providers/${svc.providerProfile.id}`}
+                      className="group/profile flex min-w-0 flex-1 flex-col gap-5 rounded-[10px] outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-4 sm:flex-row"
+                      aria-label={`Lihat profil dan portfolio ${svc.providerProfile.businessName || svc.providerProfile.user.name || 'mitra tukang'}`}
+                    >
+                      <div className="relative flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border-[1.5px] border-[#E2E8F0] bg-[#F8FAFC] transition-colors group-hover/profile:border-[#FDBA74]">
+                        <span className="text-2xl font-bold text-[#64748B]">
+                          {svc.providerProfile.user.name?.charAt(0) || 'T'}
+                        </span>
+                        <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#10B981] text-white">
+                          <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-[20px] font-bold text-[#0F172A]">
-                          {svc.providerProfile.businessName || svc.providerProfile.user.name}
-                        </h3>
-                        <span className="bg-[#ECFDF5] text-[#047857] border border-[#6EE7B7] text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" /> Terverifikasi
+
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                          <h3 className="text-[20px] font-bold text-[#0F172A] transition-colors group-hover/profile:text-[#C2410C]">
+                            {svc.providerProfile.businessName || svc.providerProfile.user.name}
+                          </h3>
+                          <span className="flex items-center gap-1 rounded-full border border-[#6EE7B7] bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#047857]">
+                            <CheckCircle2 className="h-3 w-3" aria-hidden="true" /> Terverifikasi
+                          </span>
+                        </div>
+                        <p className="mb-3 text-[14px] leading-relaxed text-[#334155]">{svc.providerProfile.description || 'Mitra belum menambahkan deskripsi usaha.'}</p>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-semibold text-[#64748B]">
+                          <span className="flex items-center gap-1 text-[#0F172A]">
+                            <Star className={`h-4 w-4 ${averageRating ? 'fill-amber-500 text-amber-500' : 'text-[#94A3B8]'}`} aria-hidden="true" />
+                            {averageRating ? `${averageRating.toFixed(1)} (${reviewCount} ulasan)` : 'Belum ada ulasan'}
+                          </span>
+                          <span>Pengalaman {svc.providerProfile.experience || 0} tahun</span>
+                          <span>{svc.providerProfile._count.portfolioProjects} portfolio</span>
+                        </div>
+                        <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#C2410C]">
+                          Lihat profil dan portfolio <ArrowRight className="h-4 w-4 transition-transform group-hover/profile:translate-x-1" aria-hidden="true" />
                         </span>
                       </div>
-                      <p className="text-[14px] text-[#334155] mb-3 leading-relaxed">{svc.providerProfile.description || 'Melayani perbaikan profesional dengan jaminan kualitas.'}</p>
-                      <div className="flex items-center gap-4 text-[12px] text-[#64748B] font-semibold">
-                        <span className="flex items-center gap-1 text-[#0F172A]"><Star className="w-4 h-4 text-amber-500 fill-amber-500" /> 5.0 (Baru)</span>
-                        <span>•</span>
-                        <span>Pengalaman {svc.providerProfile.experience || 1} Tahun</span>
-                      </div>
-                    </div>
+                    </Link>
 
                     <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-[#E2E8F0]">
                       <div className="text-left md:text-right">
                         <p className="text-[12px] font-semibold text-[#64748B] uppercase tracking-wider mb-1">Mulai dari</p>
-                        <p className="text-[24px] font-extrabold text-[#0F172A] tabular-nums">Rp150.000</p>
+                        <p className="text-[24px] font-extrabold text-[#0F172A] tabular-nums">
+                          {svc.price === null
+                            ? 'Belum ditentukan'
+                            : new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(svc.price)}
+                        </p>
                       </div>
                       <Link href={`/services/${category.id}/book?providerId=${svc.providerProfile.user.id}`} className={buttonVariants({ className: 'w-full md:w-auto bg-[#FF6B00] hover:bg-[#E05E00] text-white font-bold rounded-[8px] h-12 px-8 shadow-[0_4px_12px_rgba(255,107,0,0.35)] transition-transform active:scale-95' })}>
                         Pesan Tukang
@@ -120,7 +154,8 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
                   </div>
                 </CardContent>
               </Card>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

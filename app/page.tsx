@@ -5,7 +5,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, CheckCircle, Flame, User, Check, Star, Search, Calendar } from "lucide-react";
 
-const TUKANG_DATA = [
+type Tukang = {
+  id: number;
+  name: string;
+  category: string;
+  rating: number;
+  jobs: number;
+  price: number;
+  verified: boolean;
+  skills: string[];
+};
+
+const TUKANG_DATA: Tukang[] = [
   { id: 1, name: "Budi Santoso", category: "Listrik", rating: 4.9, jobs: 124, price: 150000, verified: true, skills: ["Instalasi", "Panel"] },
   { id: 2, name: "Agus Pipa", category: "Pipa & Air", rating: 4.8, jobs: 89, price: 120000, verified: true, skills: ["Bocor", "Pompa"] },
   { id: 3, name: "Siti AC", category: "AC", rating: 5.0, jobs: 210, price: 100000, verified: true, skills: ["Cuci AC", "Freon"] },
@@ -19,7 +30,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTukang, setSelectedTukang] = useState<any>(null);
+  const [selectedTukang, setSelectedTukang] = useState<Tukang | null>(null);
   const [toastMsg, setToastMsg] = useState("");
   
   useEffect(() => {
@@ -35,7 +46,7 @@ export default function Home() {
     return matchCat && matchSearch;
   });
 
-  const handlePesan = (tukang: any) => {
+  const handlePesan = (tukang: Tukang) => {
     setSelectedTukang(tukang);
     setIsModalOpen(true);
   };

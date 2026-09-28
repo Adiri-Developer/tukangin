@@ -27,7 +27,10 @@ export default function RegisterPage() {
             Pilih peran Anda dan lengkapi data
           </CardDescription>
         </CardHeader>
-        <form action={registerUser}>
+        <form action={async (formData) => {
+          'use server'
+          await registerUser(formData)
+        }}>
           <CardContent className="space-y-5">
             <div className="space-y-2 group">
               <Label htmlFor="name" className="text-[14px] font-semibold text-[#0F172A] group-focus-within:text-[#FF6B00] transition-colors">Nama Lengkap</Label>

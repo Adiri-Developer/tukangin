@@ -5,9 +5,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createAgreement, payEscrow, completeWork, releaseEscrow } from '@/app/actions/booking'
-import { AlertCircle, CalendarClock, MapPin, Wrench, Lock, CheckCircle2, ChevronRight, Check } from 'lucide-react'
+import { ReviewForm } from './review-form'
+import { AlertCircle, CalendarClock, MapPin, Wrench, Lock, CheckCircle2, ChevronRight, Check, Star } from 'lucide-react'
 
-export default async function BookingsPage() {
+export default async function BookingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ reviewStatus?: string; reviewMessage?: string }>
+}) {
+  const { reviewStatus, reviewMessage } = await searchParams
   const session = await auth()
   if (!session?.user?.email) return null
 
@@ -35,6 +41,7 @@ export default async function BookingsPage() {
       serviceCategory: true,
       agreement: true,
       payment: true,
+      review: true,
     },
     orderBy: { createdAt: 'desc' }
   })
@@ -45,6 +52,19 @@ export default async function BookingsPage() {
         <h1 className="text-[28px] md:text-[36px] font-extrabold text-[#0F172A] tracking-tight mb-1">Daftar Pesanan</h1>
         <p className="text-[#334155] text-lg">Riwayat layanan, persetujuan kerja, dan pembayaran Escrow.</p>
       </div>
+
+      {reviewMessage && (
+        <div
+          role="status"
+          className={`rounded-[12px] border px-4 py-3 text-sm font-semibold ${
+            reviewStatus === 'success'
+              ? 'border-[#6EE7B7] bg-[#ECFDF5] text-[#065F46]'
+              : 'border-[#FCA5A5] bg-[#FEF2F2] text-[#991B1B]'
+          }`}
+        >
+          {reviewMessage}
+        </div>
+      )}
 
       {bookings.length === 0 ? (
         <Card className="border-[#E2E8F0] rounded-[16px] bg-white shadow-sm">
@@ -129,6 +149,33 @@ export default async function BookingsPage() {
                           <p className="text-xs text-[#047857] mb-0.5">Total Biaya</p>
                           <p className="text-lg font-bold text-[#065F46] tabular-nums">Rp{(booking.payment.amount).toLocaleString('id-ID')}</p>
                         </div>
+                      </div>
+                    )}
+
+                    {booking.review && (
+                      <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] p-4">
+                        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-xs font-bold uppercase tracking-wider text-[#92400E]">
+                            Ulasan customer
+                          </p>
+                          <div className="flex items-center gap-0.5" aria-label={`${booking.review.rating} dari 5 bintang`}>
+                            {[1, 2, 3, 4, 5].map((value) => (
+                              <Star
+                                key={value}
+                                aria-hidden="true"
+                                className={`h-4 w-4 ${value <= booking.review!.rating ? 'fill-amber-400 text-amber-500' : 'text-[#D1D5DB]'}`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        {booking.review.comment ? (
+                          <p className="text-sm leading-6 text-[#78350F]">“{booking.review.comment}”</p>
+                        ) : (
+                          <p className="text-sm text-[#92400E]">Customer memberikan {booking.review.rating} bintang tanpa komentar.</p>
+                        )}
+                        <p className="mt-2 text-[11px] text-[#A16207]">
+                          Dikirim {new Date(booking.review.createdAt).toLocaleDateString('id-ID')}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -216,6 +263,13 @@ export default async function BookingsPage() {
                           Lepas Dana ke Tukang
                         </Button>
                       </form>
+                    )}
+
+                    {!isProvider && booking.status === 'COMPLETED' && booking.payment?.status === 'RELEASED' && !booking.review && (
+                      <ReviewForm
+                        bookingId={booking.id}
+                        providerName={booking.provider.name || 'mitra tukang'}
+                      />
                     )}
                   </div>
                 </div>

@@ -2,8 +2,8 @@ import { auth } from '@/auth'
 import { db } from '@/lib/db'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { CheckCircle, AlertCircle, Wrench, Clock } from 'lucide-react'
+import { buttonVariants } from '@/components/ui/button'
+import { CheckCircle, AlertCircle, Clock } from 'lucide-react'
 
 export default async function DashboardPage() {
   const session = await auth()

@@ -29,7 +29,10 @@ export default function LoginPage() {
             Masuk untuk melanjutkan
           </CardDescription>
         </CardHeader>
-        <form action={authenticate}>
+        <form action={async (formData) => {
+          'use server'
+          await authenticate(formData)
+        }}>
           <CardContent className="space-y-5">
             <div className="space-y-2 group">
               <Label htmlFor="email" className="text-[14px] font-semibold text-[#0F172A] group-focus-within:text-[#FF6B00] transition-colors">Email</Label>

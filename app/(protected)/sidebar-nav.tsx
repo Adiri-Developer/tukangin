@@ -4,34 +4,33 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
-import { Menu, Home, UserCircle, CalendarClock, Search, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Menu, Home, UserCircle, CalendarClock, Search, LogOut, ChevronLeft, ChevronRight, BriefcaseBusiness } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { logoutUser } from '@/app/actions/auth'
 
-export function SidebarNav({ role }: { role?: string }) {
-  const pathname = usePathname()
-  const [isCollapsed, setIsCollapsed] = useState(false)
+type NavItem = {
+  name: string
+  href: string
+  icon: typeof Home
+  hideForProvider?: boolean
+  providerOnly?: boolean
+}
 
-  const navItems = [
-    { name: 'Beranda', href: '/dashboard', icon: Home },
-    { name: 'Cari Tukang', href: '/services', icon: Search, hideForProvider: true },
-    { name: 'Pesanan', href: '/dashboard/bookings', icon: CalendarClock },
-    { name: 'Profil Saya', href: '/dashboard/profile', icon: UserCircle },
-  ].filter((item) => !(item.hideForProvider && role === 'PROVIDER'))
-
-  const NavLinks = ({ collapsed = false }: { collapsed?: boolean }) => (
+function NavLinks({ items, pathname, collapsed = false }: { items: NavItem[]; pathname: string; collapsed?: boolean }) {
+  return (
     <>
-      {navItems.map((item) => {
+      {items.map((item) => {
         const isActive = pathname === item.href
         const Icon = item.icon
+
         return (
-          <Link 
+          <Link
             key={item.href}
-            href={item.href} 
+            href={item.href}
             title={collapsed ? item.name : undefined}
             className={`flex items-center gap-3 h-12 rounded-[8px] font-semibold transition-all duration-200 ${collapsed ? 'justify-center px-0' : 'px-4'} ${
-              isActive 
-                ? 'bg-[#FF6B00]/10 text-[#FF6B00] shadow-sm' 
+              isActive
+                ? 'bg-[#FF6B00]/10 text-[#FF6B00] shadow-sm'
                 : 'text-[#334155] hover:text-[#FF6B00] hover:bg-slate-50'
             }`}
           >
@@ -42,20 +41,39 @@ export function SidebarNav({ role }: { role?: string }) {
       })}
     </>
   )
+}
 
-  const LogoutButton = ({ collapsed = false }: { collapsed?: boolean }) => (
+function LogoutButton({ collapsed = false }: { collapsed?: boolean }) {
+  return (
     <form action={logoutUser} className="w-full">
-      <Button 
-        type="submit" 
-        variant="outline" 
-        title={collapsed ? "Keluar Akun" : undefined}
+      <Button
+        type="submit"
+        variant="outline"
+        title={collapsed ? 'Keluar Akun' : undefined}
         className={`w-full border-[#FCA5A5] text-[#B91C1C] hover:bg-[#FEF2F2] hover:text-[#991B1B] font-semibold h-12 rounded-[8px] flex items-center transition-colors ${collapsed ? 'justify-center px-0' : 'px-4 justify-start gap-3'}`}
       >
-        <LogOut className="w-5 h-5 shrink-0" /> 
+        <LogOut className="w-5 h-5 shrink-0" />
         {!collapsed && <span>Keluar Akun</span>}
       </Button>
     </form>
   )
+}
+
+export function SidebarNav({ role }: { role?: string }) {
+  const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const navItems: NavItem[] = [
+    { name: 'Beranda', href: '/dashboard', icon: Home },
+    { name: 'Cari Tukang', href: '/services', icon: Search, hideForProvider: true },
+    { name: 'Pesanan', href: '/dashboard/bookings', icon: CalendarClock },
+    { name: 'Jasa & Portfolio', href: '/dashboard/services', icon: BriefcaseBusiness, providerOnly: true },
+    { name: 'Profil Saya', href: '/dashboard/profile', icon: UserCircle },
+  ].filter((item) => {
+    if (item.hideForProvider && role === 'PROVIDER') return false
+    if (item.providerOnly && role !== 'PROVIDER') return false
+    return true
+  })
 
   return (
     <>
@@ -97,7 +115,7 @@ export function SidebarNav({ role }: { role?: string }) {
         )}
 
         <nav className={`flex-1 flex flex-col gap-1.5 overflow-y-auto overflow-x-hidden ${isCollapsed ? 'p-3 mt-2' : 'p-4'}`}>
-          <NavLinks collapsed={isCollapsed} />
+          <NavLinks items={navItems} pathname={pathname} collapsed={isCollapsed} />
         </nav>
 
         <div className={`border-t border-[#E2E8F0] bg-slate-50/50 shrink-0 ${isCollapsed ? 'p-3' : 'p-4'}`}>
@@ -121,7 +139,7 @@ export function SidebarNav({ role }: { role?: string }) {
               <SheetTitle className="font-extrabold text-[#0F172A] tracking-tight text-xl">Menu Utama</SheetTitle>
             </SheetHeader>
             <nav className="flex-1 p-4 flex flex-col gap-1.5 overflow-y-auto">
-              <NavLinks />
+              <NavLinks items={navItems} pathname={pathname} />
             </nav>
             <div className="p-4 border-t border-[#E2E8F0] bg-slate-50/50 shrink-0">
               <LogoutButton />

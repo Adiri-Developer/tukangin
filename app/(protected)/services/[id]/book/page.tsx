@@ -59,7 +59,10 @@ export default async function BookingPage({
             Pesan layanan <b>{category.name}</b> dengan <b>{provider.providerProfile?.businessName || provider.name}</b>
           </CardDescription>
         </CardHeader>
-        <form action={createBooking}>
+        <form action={async (formData) => {
+          'use server'
+          await createBooking(formData)
+        }}>
           <input type="hidden" name="providerId" value={provider.id} />
           <input type="hidden" name="categoryId" value={category.id} />
           
