@@ -5,28 +5,22 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
 import { Menu } from 'lucide-react'
 
+import { buttonVariants } from '@/components/ui/button'
+
 export function SidebarNav() {
   const NavLinks = () => (
     <>
-      <Link href="/dashboard">
-        <Button variant="ghost" className="w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]">
-          Beranda
-        </Button>
+      <Link href="/dashboard" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
+        Beranda
       </Link>
-      <Link href="/dashboard/profile">
-        <Button variant="ghost" className="w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]">
-          Profil Saya
-        </Button>
+      <Link href="/dashboard/profile" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
+        Profil Saya
       </Link>
-      <Link href="/dashboard/bookings">
-        <Button variant="ghost" className="w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]">
-          Pesanan
-        </Button>
+      <Link href="/dashboard/bookings" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
+        Pesanan
       </Link>
-      <Link href="/services">
-        <Button variant="ghost" className="w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]">
-          Cari Tukang
-        </Button>
+      <Link href="/services" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
+        Cari Tukang
       </Link>
     </>
   )

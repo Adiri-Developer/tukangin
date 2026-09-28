@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -46,8 +46,8 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
     <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/services">
-            <Button variant="outline" className="border-[#E2E8F0] text-[#0F172A] rounded-lg">Kembali</Button>
+          <Link href="/services" className={buttonVariants({ variant: 'outline', className: 'border-[#E2E8F0] text-[#0F172A] rounded-lg' })}>
+            Kembali
           </Link>
           <h1 className="text-[28px] font-bold text-[#0F172A]">{category.icon} {category.name}</h1>
         </div>
@@ -93,10 +93,8 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
                         <p className="text-[12px] text-[#64748B]">Mulai dari</p>
                         <p className="text-[20px] font-bold text-[#0F172A] font-[tabular-nums]">Rp150.000</p>
                       </div>
-                      <Link href={`/services/${id}/book?providerId=${svc.providerProfile.user.id}`} className="w-full md:w-auto">
-                        <Button className="w-full md:w-auto bg-[#FF6B00] hover:bg-[#E05E00] text-white font-semibold rounded-[8px] h-12 px-6">
-                          Pesan Tukang
-                        </Button>
+                      <Link href={`/services/${id}/book?providerId=${svc.providerProfile.user.id}`} className={buttonVariants({ className: 'w-full md:w-auto bg-[#FF6B00] hover:bg-[#E05E00] text-white font-semibold rounded-[8px] h-12 px-6' })}>
+                        Pesan Tukang
                       </Link>
                     </div>
                   </div>

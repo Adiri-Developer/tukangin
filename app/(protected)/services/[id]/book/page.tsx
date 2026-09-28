@@ -2,7 +2,7 @@ import { db } from '@/lib/db'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createBooking } from '@/app/actions/booking'
@@ -76,8 +76,8 @@ export default async function BookingPage({
           </CardContent>
           
           <CardFooter className="flex gap-4 border-t border-[#E2E8F0] pt-6">
-            <Link href={`/services/${id}`} className="w-full">
-              <Button type="button" variant="outline" className="w-full h-12 rounded-[8px] border-[#E2E8F0]">Batal</Button>
+            <Link href={`/services/${id}`} className={buttonVariants({ variant: 'outline', className: 'w-full h-12 rounded-[8px] border-[#E2E8F0]' })}>
+              Batal
             </Link>
             <Button type="submit" className="w-full h-12 bg-[#FF6B00] hover:bg-[#E05E00] text-white font-semibold rounded-[8px]">
               Konfirmasi Pesanan

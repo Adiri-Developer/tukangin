@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import Link from 'next/link'
 
 export default function Home() {
@@ -7,11 +7,11 @@ export default function Home() {
       <header className="flex items-center justify-between p-4 md:px-8 border-b border-slate-200 bg-white">
         <div className="text-xl font-bold text-slate-900 tracking-tight">Tukangin</div>
         <div className="flex gap-2">
-          <Link href="/login">
-            <Button variant="outline" className="border-slate-200 text-slate-900 rounded-lg">Masuk</Button>
+          <Link href="/login" className={buttonVariants({ variant: 'outline', className: 'border-slate-200 text-slate-900 rounded-lg' })}>
+            Masuk
           </Link>
-          <Link href="/register">
-            <Button className="bg-[#FF6B00] hover:bg-[#E05E00] text-white rounded-lg">Daftar</Button>
+          <Link href="/register" className={buttonVariants({ className: 'bg-[#FF6B00] hover:bg-[#E05E00] text-white rounded-lg' })}>
+            Daftar
           </Link>
         </div>
       </header>
@@ -41,10 +41,8 @@ export default function Home() {
         </div>
         
         <div className="mt-12">
-          <Link href="/login">
-            <Button className="bg-[#FF6B00] hover:bg-[#E05E00] text-white rounded-lg h-14 px-8 text-lg font-semibold">
-              Cari Tukang Sekarang
-            </Button>
+          <Link href="/login" className={buttonVariants({ className: 'bg-[#FF6B00] hover:bg-[#E05E00] text-white rounded-lg h-14 px-8 text-lg font-semibold' })}>
+            Cari Tukang Sekarang
           </Link>
         </div>
       </main>

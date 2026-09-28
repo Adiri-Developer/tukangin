@@ -2,7 +2,7 @@ import { auth } from '@/auth'
 import { db } from '@/lib/db'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -68,8 +68,8 @@ export default async function DashboardPage() {
           <CardContent>
             <p className="text-sm text-slate-500 mb-4">Belum ada pesanan aktif saat ini.</p>
             {!isProvider && (
-              <Link href="/services">
-                <Button className="w-full bg-[#FF6B00] hover:bg-[#E05E00] text-white">Cari Tukang</Button>
+              <Link href="/services" className={buttonVariants({ className: 'w-full bg-[#FF6B00] hover:bg-[#E05E00] text-white' })}>
+                Cari Tukang
               </Link>
             )}
           </CardContent>
