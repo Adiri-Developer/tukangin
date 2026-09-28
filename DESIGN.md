@@ -263,12 +263,8 @@ Website harus terasa hidup seperti situs marketplace pada umumnya. Setiap elemen
 
 ## Prompt untuk AI (Website Interaktif)
 
-Salin prompt di bawah ini ke AI (Claude, dll.) bersama file DESIGN.md ini.
-
 ```text
-Kamu adalah senior front-end designer. Buatkan website marketplace jasa tukang
-"Tukang Pro" dalam SATU file HTML (HTML + CSS + JavaScript vanilla, tanpa framework
-dan tanpa library eksternal, kecuali Google Fonts Plus Jakarta Sans).
+Kamu adalah senior front-end designer. Buatkan website dengan mengikuti prd.md.
 
 SUMBER DESAIN
 Ikuti DESIGN.md terlampir secara ketat: palet warna, token status, tipografi
@@ -314,12 +310,4 @@ TEKNIS
   viewport-fit=cover"> dan safe-area padding untuk elemen menempel di bawah.
 - Jangan pakai localStorage. Tanpa gambar eksternal (gunakan emoji/CSS).
 
-OUTPUT
-Berikan satu file HTML lengkap yang langsung bisa dibuka di browser, tanpa
-penjelasan panjang.
-```
 
-### Variasi Prompt (Opsional)
-- **Tambah halaman detail tukang:** "Tambahkan halaman detail tukang (galeri hasil kerja, ulasan, rincian RAB, tombol Cek Rincian Garansi) dengan navigasi tanpa reload."
-- **Pelacakan pesanan:** "Tambahkan halaman status pesanan dengan stepper: Menunggu Tukang → Sedang Dikerjakan → Bergaransi / Selesai, memakai token status di DESIGN.md."
-- **Dashboard Mitra Tukang:** "Buat portal desktop (12 kolom) untuk Mitra Tukang: daftar order masuk, tombol Terima/Tolak, dan ringkasan pendapatan."

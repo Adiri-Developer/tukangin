@@ -7,7 +7,7 @@ import { Menu } from 'lucide-react'
 
 import { buttonVariants } from '@/components/ui/button'
 
-export function SidebarNav() {
+export function SidebarNav({ role }: { role?: string }) {
   const NavLinks = () => (
     <>
       <Link href="/dashboard" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
@@ -19,9 +19,11 @@ export function SidebarNav() {
       <Link href="/dashboard/bookings" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
         Pesanan
       </Link>
-      <Link href="/services" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
-        Cari Tukang
-      </Link>
+      {role !== 'PROVIDER' && (
+        <Link href="/services" className={buttonVariants({ variant: 'ghost', className: 'w-full justify-start text-[#334155] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 h-12 rounded-[8px]' })}>
+          Cari Tukang
+        </Link>
+      )}
     </>
   )
 
@@ -44,11 +46,9 @@ export function SidebarNav() {
         <Link href="/dashboard" className="font-extrabold text-[#0F172A] tracking-tight text-lg">Tukangin</Link>
         
         <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="border-[#E2E8F0]">
-              <Menu className="h-5 w-5 text-[#0F172A]" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
+          <SheetTrigger className={buttonVariants({ variant: 'outline', size: 'icon', className: 'border-[#E2E8F0]' })}>
+            <Menu className="h-5 w-5 text-[#0F172A]" />
+            <span className="sr-only">Toggle Menu</span>
           </SheetTrigger>
           <SheetContent side="left" className="w-[280px] p-0 border-r border-[#E2E8F0]">
             <SheetHeader className="p-6 border-b border-[#E2E8F0] text-left">

@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { SidebarNav } from './sidebar-nav'
 
+import { db } from '@/lib/db'
+
 export default async function ProtectedLayout({
   children,
 }: {
@@ -10,14 +12,19 @@ export default async function ProtectedLayout({
 }) {
   const session = await auth()
 
-  if (!session?.user) {
+  if (!session?.user?.email) {
     redirect('/login')
   }
+
+  const user = await db.user.findUnique({
+    where: { email: session.user.email },
+    select: { role: true }
+  })
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC]">
       
-      <SidebarNav />
+      <SidebarNav role={user?.role} />
 
       {/* Main content */}
       <main className="flex-1 flex flex-col">

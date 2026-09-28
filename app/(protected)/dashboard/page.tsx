@@ -59,8 +59,8 @@ export default async function DashboardPage() {
                 )}
               </div>
             )}
-            <Link href="/dashboard/profile">
-              <Button className="w-full bg-[#0F172A] hover:bg-[#1E293B] text-white">Lengkapi Profil</Button>
+            <Link href="/dashboard/profile" className={buttonVariants({ className: 'w-full bg-[#0F172A] hover:bg-[#1E293B] text-white' })}>
+              Lengkapi Profil
             </Link>
           </CardContent>
         </Card>
