@@ -7,6 +7,15 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/co
 import { Menu, Home, UserCircle, CalendarClock, Search, LogOut, ChevronLeft, ChevronRight, BriefcaseBusiness } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { logoutUser } from '@/app/actions/auth'
+import { ProfileMenu } from './profile-menu'
+
+type ProfileSummary = {
+  name: string
+  email: string
+  image?: string | null
+  accountType: string
+  roleLabel: string
+}
 
 type NavItem = {
   name: string
@@ -59,7 +68,7 @@ function LogoutButton({ collapsed = false }: { collapsed?: boolean }) {
   )
 }
 
-export function SidebarNav({ role }: { role?: string }) {
+export function SidebarNav({ role, profile }: { role?: string; profile: ProfileSummary }) {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -129,23 +138,26 @@ export function SidebarNav({ role }: { role?: string }) {
           Tukang<span className="text-[#FF6B00]">Pro</span>
         </Link>
         
-        <Sheet>
-          <SheetTrigger className="w-10 h-10 border border-[#E2E8F0] rounded-[8px] flex items-center justify-center bg-white hover:bg-slate-50 transition-colors">
-            <Menu className="h-5 w-5 text-[#0F172A]" />
-            <span className="sr-only">Toggle Menu</span>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] p-0 border-r border-[#E2E8F0] bg-white flex flex-col">
-            <SheetHeader className="p-6 border-b border-[#E2E8F0] text-left shrink-0">
-              <SheetTitle className="font-extrabold text-[#0F172A] tracking-tight text-xl">Menu Utama</SheetTitle>
-            </SheetHeader>
-            <nav className="flex-1 p-4 flex flex-col gap-1.5 overflow-y-auto">
-              <NavLinks items={navItems} pathname={pathname} />
-            </nav>
-            <div className="p-4 border-t border-[#E2E8F0] bg-slate-50/50 shrink-0">
-              <LogoutButton />
-            </div>
-          </SheetContent>
-        </Sheet>
+        <div className="flex items-center gap-2">
+          <ProfileMenu {...profile} compact />
+          <Sheet>
+            <SheetTrigger className="w-12 h-12 border border-[#E2E8F0] rounded-[8px] flex items-center justify-center bg-white hover:bg-slate-50 transition-colors">
+              <Menu className="h-5 w-5 text-[#0F172A]" />
+              <span className="sr-only">Buka menu utama</span>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] p-0 border-r border-[#E2E8F0] bg-white flex flex-col">
+              <SheetHeader className="p-6 border-b border-[#E2E8F0] text-left shrink-0">
+                <SheetTitle className="font-extrabold text-[#0F172A] tracking-tight text-xl">Menu Utama</SheetTitle>
+              </SheetHeader>
+              <nav className="flex-1 p-4 flex flex-col gap-1.5 overflow-y-auto">
+                <NavLinks items={navItems} pathname={pathname} />
+              </nav>
+              <div className="p-4 border-t border-[#E2E8F0] bg-slate-50/50 shrink-0">
+                <LogoutButton />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </header>
     </>
   )
