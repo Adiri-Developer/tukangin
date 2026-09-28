@@ -235,3 +235,91 @@ The design system embraces a **Rounded (Level 2)** shape profile (`border-radius
 ### Bottom Sheets & Booking Summary
 - Dedicated mobile drawer sliding up from the bottom with top corner radius `24px`.
 - Includes a centered grab handle (`36px x 4px`, `#CBD5E1`) at the top, fixed bottom button container with shadow elevation level 3.
+## Interaction & Motion
+
+Website harus terasa hidup seperti situs marketplace pada umumnya. Setiap elemen yang bisa diklik wajib punya state **default, hover, focus-visible, active (pressed), disabled**. Semua transisi memakai `transition: 200ms ease` (durasi 150–300ms), dan hormati `prefers-reduced-motion`.
+
+### Hover & State per Komponen
+| Komponen | Hover | Active / Focus |
+|---|---|---|
+| Tombol Primary | Fill `#E05E00`, naik `translateY(-1px)`, shadow `0 4px 12px rgba(255,107,0,.35)` | `scale(.97)`; focus ring `3px rgba(255,107,0,.4)` |
+| Tombol Secondary | Fill `#1E293B` | `scale(.97)` |
+| Tombol Outline | Latar `#F1F5F9`, border `#CBD5E1` | Ring oranye saat focus |
+| Link navbar | Warna jadi putih, garis bawah oranye 2px memanjang 0 → 100% | Link aktif tetap bergaris |
+| Kartu Kategori | `translateY(-4px)`, shadow Level 2, border `#CBD5E1`; ikon `scale(1.12) rotate(-6deg)` | Terpilih: border `#FF6B00` + ring `rgba(255,107,0,.15)` |
+| Kartu Tukang | `translateY(-3px)`, shadow Level 2, border `#CBD5E1` | Muncul dengan fade-in + slide-up 8px, stagger 40ms |
+| Chip filter / sort | Latar `#F1F5F9` | Terpilih: latar `#0F172A`, teks putih |
+| Input | Border `#CBD5E1` | Focus: border `#FF6B00` + ring 3px `rgba(255,107,0,.15)` |
+| Checkbox / Radio baris | Latar `#F1F5F9`, border `#CBD5E1` | Checked: fill `#FF6B00` + centang putih |
+
+### Perilaku Halaman
+- **Navbar sticky** (navy `#0F172A`, shadow Level 3), smooth scroll ke section, `scroll-padding-top` setara tinggi navbar.
+- **Pencarian & filter real-time:** kategori, kata kunci, dan urutan (rating, termurah, terbanyak) memfilter daftar tukang tanpa reload. Tampilkan empty state bila hasil kosong.
+- **Booking flow:** tombol "Pesan" membuka bottom sheet (mobile) atau modal tengah (≥640px). Isi: pilihan jadwal, add-on via checkbox, total harga yang dihitung otomatis (`tabular-nums`), tombol Batal dan Konfirmasi.
+- **Penutupan modal:** klik backdrop, tombol Batal, atau tombol `Esc`.
+- **Feedback:** toast di bawah layar setelah aksi berhasil (mis. status "Menunggu Tukang"), hilang otomatis 3,5 detik.
+- **Dark mode:** ikuti `prefers-color-scheme` dan sediakan tombol ganti tema. Token warna didefinisikan sebagai CSS variables; surface gelap `#0B1220` dan `#1E293B`, teks `#F8FAFC` dan `#CBD5E1`; warna brand oranye/emerald tidak berubah.
+- **Aksesibilitas:** kontras teks minimal WCAG AA, target sentuh minimal 48px, `aria-label` pada tombol ikon, `role="dialog"` + `aria-modal` pada modal, fokus terlihat jelas.
+
+## Prompt untuk AI (Website Interaktif)
+
+Salin prompt di bawah ini ke AI (Claude, dll.) bersama file DESIGN.md ini.
+
+```text
+Kamu adalah senior front-end designer. Buatkan website marketplace jasa tukang
+"Tukang Pro" dalam SATU file HTML (HTML + CSS + JavaScript vanilla, tanpa framework
+dan tanpa library eksternal, kecuali Google Fonts Plus Jakarta Sans).
+
+SUMBER DESAIN
+Ikuti DESIGN.md terlampir secara ketat: palet warna, token status, tipografi
+Plus Jakarta Sans, radius, spacing 4px, elevasi (Level 0–4), ukuran komponen,
+dan bagian "Interaction & Motion". Jangan menambah warna atau font di luar
+palet itu. Definisikan semua warna sebagai CSS variables.
+
+BAHASA & KONTEN
+Seluruh teks UI dalam Bahasa Indonesia. Gunakan data contoh realistis (nama
+tukang Indonesia, harga dalam Rupiah, format id-ID, angka pakai tabular-nums).
+
+STRUKTUR HALAMAN
+1. Navbar sticky navy: logo "TukangPro", link (Layanan, Mitra Tukang, Cara Kerja),
+   tombol ganti tema, CTA oranye "Pesan Sekarang".
+2. Hero navy: headline berisi kata kunci oranye, subteks, kotak pencarian (48px),
+   dan chip kepercayaan (KTP & SKCK Verified, Garansi 14 Hari, jumlah pesanan berjalan).
+3. Grid kategori (Semua, Listrik, AC, Pipa & Air, Renovasi) yang tumpang tindih
+   sedikit dengan hero.
+4. Daftar Mitra Tukang: kartu dengan avatar 56px + badge verified, rating bintang
+   #F59E0B, jumlah pekerjaan, chip "Bergaransi 14 Hari", tag keahlian, harga
+   "Mulai dari", dan tombol "Pesan".
+5. Section "Cara Kerja" 3 langkah.
+6. Footer navy.
+
+INTERAKSI WAJIB
+- Semua elemen klik punya state hover, focus-visible, active, disabled sesuai tabel
+  hover di DESIGN.md (kartu terangkat, tombol berubah warna, garis bawah link
+  memanjang, ikon kategori berputar sedikit).
+- Filter kategori + pencarian real-time + urutan (rating / termurah / terbanyak);
+  tampilkan empty state jika hasil kosong.
+- Klik "Pesan" membuka bottom sheet (mobile) / modal (desktop) dengan: pilihan
+  jadwal (Hari ini/Besok/Lusa), 2 add-on checkbox, total harga otomatis,
+  tombol Batal & Konfirmasi. Tutup via Esc dan klik backdrop.
+- Setelah konfirmasi tampilkan toast dengan status "Menunggu Tukang".
+- Animasi kartu fade-in stagger, transisi 200ms, hormati prefers-reduced-motion.
+- Dark mode otomatis (prefers-color-scheme) + tombol toggle manual.
+
+TEKNIS
+- Mobile-first, responsif (4/8/12 kolom sesuai DESIGN.md), max-width 1200px.
+- Tap target minimal 48px, kontras WCAG AA, aria-label pada tombol ikon,
+  role="dialog" pada modal.
+- Tambahkan <meta name="viewport" content="width=device-width, initial-scale=1,
+  viewport-fit=cover"> dan safe-area padding untuk elemen menempel di bawah.
+- Jangan pakai localStorage. Tanpa gambar eksternal (gunakan emoji/CSS).
+
+OUTPUT
+Berikan satu file HTML lengkap yang langsung bisa dibuka di browser, tanpa
+penjelasan panjang.
+```
+
+### Variasi Prompt (Opsional)
+- **Tambah halaman detail tukang:** "Tambahkan halaman detail tukang (galeri hasil kerja, ulasan, rincian RAB, tombol Cek Rincian Garansi) dengan navigasi tanpa reload."
+- **Pelacakan pesanan:** "Tambahkan halaman status pesanan dengan stepper: Menunggu Tukang → Sedang Dikerjakan → Bergaransi / Selesai, memakai token status di DESIGN.md."
+- **Dashboard Mitra Tukang:** "Buat portal desktop (12 kolom) untuk Mitra Tukang: daftar order masuk, tombol Terima/Tolak, dan ringkasan pendapatan."

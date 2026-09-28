@@ -31,15 +31,17 @@ export default function Home() {
             { title: 'Ledeng', icon: '💧' },
             { title: 'Renovasi', icon: '🔨' }
           ].map((service, i) => (
-            <div key={i} className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-[16px] shadow-sm hover:border-[#FF6B00]/50 transition-colors cursor-pointer">
-              <div className="text-4xl mb-3">{service.icon}</div>
-              <h3 className="font-semibold text-slate-900">{service.title}</h3>
-            </div>
+            <Link key={i} href="/services">
+              <div className="flex flex-col items-center justify-center p-6 bg-white border border-slate-200 rounded-[16px] shadow-sm hover:border-[#FF6B00]/50 transition-colors cursor-pointer h-full">
+                <div className="text-4xl mb-3">{service.icon}</div>
+                <h3 className="font-semibold text-slate-900">{service.title}</h3>
+              </div>
+            </Link>
           ))}
         </div>
         
         <div className="mt-12">
-          <Link href="/register">
+          <Link href="/login">
             <Button className="bg-[#FF6B00] hover:bg-[#E05E00] text-white rounded-lg h-14 px-8 text-lg font-semibold">
               Cari Tukang Sekarang
             </Button>

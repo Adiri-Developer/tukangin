@@ -45,11 +45,14 @@ export async function registerUser(formData: FormData) {
 }
 
 export async function authenticate(
-  prevState: string | undefined,
   formData: FormData,
 ) {
   try {
-    await signIn('credentials', Object.fromEntries(formData))
+    await signIn('credentials', {
+      email: formData.get('email'),
+      password: formData.get('password'),
+      redirectTo: '/dashboard'
+    })
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
