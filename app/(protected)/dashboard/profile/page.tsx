@@ -92,25 +92,36 @@ export default async function ProfilePage() {
 
       {isProvider && (
         <form action={requestVerification}>
-          <Card className="border-slate-200 rounded-[16px] border-[#CBD5E1]">
+          <Card className="border-[#E2E8F0] rounded-[16px]">
             <CardHeader>
-              <CardTitle>Verifikasi Akun (KTP)</CardTitle>
+              <CardTitle>Verifikasi Akun & Kemitraan</CardTitle>
               <CardDescription>
                 {user.providerProfile?.isVerified 
-                  ? 'Akun Anda sudah diverifikasi.' 
-                  : 'Mohon masukkan nomor KTP Anda untuk verifikasi identitas (MVP).'}
+                  ? 'Akun Anda sudah diverifikasi dan surat perjanjian kemitraan telah disetujui.' 
+                  : 'Selesaikan proses verifikasi dan unggah Surat Perjanjian Kemitraan bermaterai elektronik.'}
               </CardDescription>
             </CardHeader>
             {!user.providerProfile?.isVerified && (
               <>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="ktpNumber">Nomor KTP (NIK)</Label>
-                    <Input id="ktpNumber" name="ktpNumber" required placeholder="3201..." />
+                    <Input id="ktpNumber" name="ktpNumber" required placeholder="3201..." className="border-[#E2E8F0] focus-visible:ring-[#FF6B00]" />
+                  </div>
+                  
+                  <div className="p-4 bg-[#FFF7ED] border border-[#FDBA74] rounded-lg space-y-4">
+                    <div>
+                      <h4 className="text-[14px] font-bold text-[#C2410C]">Surat Perjanjian Kemitraan (e-Materai)</h4>
+                      <p className="text-[12px] text-[#9A3412]">Unduh template perjanjian, bubuhkan e-materai, lalu unggah kembali dokumen tersebut (format PDF/Gambar).</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="agreementDoc" className="text-[#9A3412]">Unggah Dokumen Perjanjian</Label>
+                      <Input id="agreementDoc" name="agreementDoc" type="file" accept=".pdf,image/*" required className="border-[#FDBA74] bg-white cursor-pointer" />
+                    </div>
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button type="submit" className="bg-[#0F172A] hover:bg-[#1E293B] text-white">Ajukan Verifikasi</Button>
+                  <Button type="submit" className="bg-[#0F172A] hover:bg-[#1E293B] text-white">Ajukan Verifikasi & Kemitraan</Button>
                 </CardFooter>
               </>
             )}

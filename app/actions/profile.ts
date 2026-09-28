@@ -42,6 +42,10 @@ export async function requestVerification(formData: FormData) {
   if (!session?.user?.email) return { error: 'Unauthorized' }
 
   const ktpNumber = formData.get('ktpNumber') as string
+  const agreementDoc = formData.get('agreementDoc') as string
+  
+  if (!agreementDoc) return { error: 'Surat perjanjian e-materai wajib diunggah!' }
+
   // Uploads would go to Supabase Storage, but for MVP we mock the image paths
   const ktpImage = 'mock-ktp-url' 
   const faceImage = 'mock-face-url'
@@ -58,6 +62,8 @@ export async function requestVerification(formData: FormData) {
       ktpNumber,
       ktpImage,
       faceImage,
+      partnershipAgreementUrl: 'mock-ematerai-url.pdf',
+      partnershipAgreedAt: new Date(),
       // Automatically verify for MVP simulation
       isVerified: true 
     }

@@ -38,6 +38,7 @@ model User {
   
   bookingsAsCustomer Booking[] @relation("CustomerBookings")
   bookingsAsProvider Booking[] @relation("ProviderBookings")
+  reviewsGiven       Review[]
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -66,7 +67,12 @@ model ProviderProfile {
   ktpImage       String?
   faceImage      String?
   
+  partnershipAgreementUrl String?
+  partnershipAgreedAt     DateTime?
+  
   services       ProviderService[]
+  portfolioProjects PortfolioProject[]
+  reviews        Review[]
 }
 
 model ServiceCategory {
