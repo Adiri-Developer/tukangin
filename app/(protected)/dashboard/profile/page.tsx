@@ -48,11 +48,11 @@ export default async function ProfilePage() {
         <CardContent className="space-y-5 pt-6">
           <div className="space-y-2">
             <Label className="text-[#0F172A] font-semibold text-sm">Nama</Label>
-            <Input disabled value={user.name || ''} className="bg-slate-50 text-slate-500 border-[#E2E8F0] h-12 rounded-[8px]" />
+            <Input disabled defaultValue={user.name || ''} className="bg-slate-50 text-slate-500 border-[#E2E8F0] h-12 rounded-[8px]" />
           </div>
           <div className="space-y-2">
             <Label className="text-[#0F172A] font-semibold text-sm">Email</Label>
-            <Input disabled value={user.email || ''} className="bg-slate-50 text-slate-500 border-[#E2E8F0] h-12 rounded-[8px]" />
+            <Input disabled defaultValue={user.email || ''} className="bg-slate-50 text-slate-500 border-[#E2E8F0] h-12 rounded-[8px]" />
           </div>
         </CardContent>
       </Card>

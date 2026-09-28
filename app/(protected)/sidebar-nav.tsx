@@ -1,27 +1,25 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
-import { Menu, Home, UserCircle, CalendarClock, Search, LogOut } from 'lucide-react'
+import { Menu, Home, UserCircle, CalendarClock, Search, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-
-import { buttonVariants } from '@/components/ui/button'
+import { logoutUser } from '@/app/actions/auth'
 
 export function SidebarNav({ role }: { role?: string }) {
   const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const navItems = [
     { name: 'Beranda', href: '/dashboard', icon: Home },
-    { name: 'Profil Saya', href: '/dashboard/profile', icon: UserCircle },
+    { name: 'Cari Tukang', href: '/services', icon: Search, hideForProvider: true },
     { name: 'Pesanan', href: '/dashboard/bookings', icon: CalendarClock },
-  ]
+    { name: 'Profil Saya', href: '/dashboard/profile', icon: UserCircle },
+  ].filter((item) => !(item.hideForProvider && role === 'PROVIDER'))
 
-  if (role !== 'PROVIDER') {
-    navItems.push({ name: 'Cari Tukang', href: '/services', icon: Search })
-  }
-
-  const NavLinks = () => (
+  const NavLinks = ({ collapsed = false }: { collapsed?: boolean }) => (
     <>
       {navItems.map((item) => {
         const isActive = pathname === item.href
@@ -30,38 +28,87 @@ export function SidebarNav({ role }: { role?: string }) {
           <Link 
             key={item.href}
             href={item.href} 
-            className={`flex items-center gap-3 px-4 h-12 rounded-[8px] font-semibold transition-all duration-200 ${
+            title={collapsed ? item.name : undefined}
+            className={`flex items-center gap-3 h-12 rounded-[8px] font-semibold transition-all duration-200 ${collapsed ? 'justify-center px-0' : 'px-4'} ${
               isActive 
                 ? 'bg-[#FF6B00]/10 text-[#FF6B00] shadow-sm' 
                 : 'text-[#334155] hover:text-[#FF6B00] hover:bg-slate-50'
             }`}
           >
-            <Icon className={`w-5 h-5 ${isActive ? 'text-[#FF6B00]' : 'text-[#64748B]'}`} />
-            {item.name}
+            <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-[#FF6B00]' : 'text-[#64748B]'}`} />
+            {!collapsed && <span className="truncate">{item.name}</span>}
           </Link>
         )
       })}
     </>
   )
 
+  const LogoutButton = ({ collapsed = false }: { collapsed?: boolean }) => (
+    <form action={logoutUser} className="w-full">
+      <Button 
+        type="submit" 
+        variant="outline" 
+        title={collapsed ? "Keluar Akun" : undefined}
+        className={`w-full border-[#FCA5A5] text-[#B91C1C] hover:bg-[#FEF2F2] hover:text-[#991B1B] font-semibold h-12 rounded-[8px] flex items-center transition-colors ${collapsed ? 'justify-center px-0' : 'px-4 justify-start gap-3'}`}
+      >
+        <LogOut className="w-5 h-5 shrink-0" /> 
+        {!collapsed && <span>Keluar Akun</span>}
+      </Button>
+    </form>
+  )
+
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="w-72 bg-white border-r border-[#E2E8F0] hidden md:flex flex-col z-10 shadow-[1px_0_4px_rgba(15,23,42,0.02)]">
-        <div className="h-[72px] px-6 border-b border-[#E2E8F0] flex items-center">
-          <Link href="/dashboard" className="text-2xl font-extrabold text-[#0F172A] tracking-tight">
-            Tukang<span className="text-[#FF6B00]">In</span>
-          </Link>
+      <aside 
+        className={`bg-white border-r border-[#E2E8F0] hidden md:flex flex-col z-20 shadow-[1px_0_4px_rgba(15,23,42,0.02)] transition-all duration-300 ease-in-out sticky top-0 h-screen shrink-0 ${isCollapsed ? 'w-20' : 'w-72'}`}
+      >
+        <div className={`h-[72px] border-b border-[#E2E8F0] flex items-center shrink-0 ${isCollapsed ? 'justify-center px-0' : 'px-6 justify-between'}`}>
+          {!isCollapsed && (
+            <Link href="/dashboard" className="text-2xl font-extrabold text-[#0F172A] tracking-tight truncate">
+              Tukang<span className="text-[#FF6B00]">Pro</span>
+            </Link>
+          )}
+          {isCollapsed && (
+            <Link href="/dashboard" className="text-xl font-extrabold text-[#FF6B00] tracking-tight">
+              T<span className="text-[#0F172A]">P</span>
+            </Link>
+          )}
+          <button 
+            onClick={() => setIsCollapsed(!isCollapsed)} 
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-[#64748B] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 transition-colors ${isCollapsed ? 'hidden' : 'block'}`}
+            title="Tutup Sidebar"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
         </div>
-        <nav className="flex-1 p-4 flex flex-col gap-1.5">
-          <NavLinks />
+        
+        {/* If collapsed, show the toggle button just below the header */}
+        {isCollapsed && (
+          <div className="flex justify-center pt-4">
+             <button 
+              onClick={() => setIsCollapsed(!isCollapsed)} 
+              className="w-10 h-10 rounded-[8px] flex items-center justify-center text-[#64748B] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10 border border-transparent hover:border-[#FF6B00]/20 transition-all"
+              title="Buka Sidebar"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
+        <nav className={`flex-1 flex flex-col gap-1.5 overflow-y-auto overflow-x-hidden ${isCollapsed ? 'p-3 mt-2' : 'p-4'}`}>
+          <NavLinks collapsed={isCollapsed} />
         </nav>
+
+        <div className={`border-t border-[#E2E8F0] bg-slate-50/50 shrink-0 ${isCollapsed ? 'p-3' : 'p-4'}`}>
+          <LogoutButton collapsed={isCollapsed} />
+        </div>
       </aside>
 
       {/* Mobile Header */}
-      <header className="md:hidden sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E8F0] px-4 flex justify-between items-center h-[64px] shadow-sm">
+      <header className="md:hidden sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E8F0] px-4 flex justify-between items-center h-[64px] shadow-sm shrink-0 w-full">
         <Link href="/dashboard" className="font-extrabold text-[#0F172A] tracking-tight text-xl">
-          Tukang<span className="text-[#FF6B00]">In</span>
+          Tukang<span className="text-[#FF6B00]">Pro</span>
         </Link>
         
         <Sheet>
@@ -69,13 +116,16 @@ export function SidebarNav({ role }: { role?: string }) {
             <Menu className="h-5 w-5 text-[#0F172A]" />
             <span className="sr-only">Toggle Menu</span>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] p-0 border-r border-[#E2E8F0] bg-white">
-            <SheetHeader className="p-6 border-b border-[#E2E8F0] text-left">
+          <SheetContent side="left" className="w-[300px] p-0 border-r border-[#E2E8F0] bg-white flex flex-col">
+            <SheetHeader className="p-6 border-b border-[#E2E8F0] text-left shrink-0">
               <SheetTitle className="font-extrabold text-[#0F172A] tracking-tight text-xl">Menu Utama</SheetTitle>
             </SheetHeader>
-            <nav className="flex-1 p-4 flex flex-col gap-1.5">
+            <nav className="flex-1 p-4 flex flex-col gap-1.5 overflow-y-auto">
               <NavLinks />
             </nav>
+            <div className="p-4 border-t border-[#E2E8F0] bg-slate-50/50 shrink-0">
+              <LogoutButton />
+            </div>
           </SheetContent>
         </Sheet>
       </header>
