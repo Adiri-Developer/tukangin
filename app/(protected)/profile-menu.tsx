@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, LogOut, PencilLine, UserRound } from 'lucide-react'
+import { LogOut, PencilLine, UserRound } from 'lucide-react'
 import { logoutUser } from '@/app/actions/auth'
 
 type ProfileMenuProps = {
@@ -76,10 +76,10 @@ export function ProfileMenu({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((current) => !current)}
-        className={`group flex min-h-12 items-center border bg-white text-left transition-all duration-200 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] active:scale-[0.98] focus-visible:ring-[#FF6B00]/40 ${
+        className={`group flex min-h-12 items-center text-left transition-all duration-200 active:scale-[0.98] focus-visible:ring-[#FF6B00]/40 ${
           compact
-            ? 'h-12 w-12 justify-center rounded-full border-[#E2E8F0] p-1.5'
-            : 'min-w-[220px] max-w-[280px] gap-3 rounded-[12px] border-[#E2E8F0] px-3 py-2'
+            ? 'h-12 w-12 justify-center rounded-full border border-[#E2E8F0] bg-white p-1.5 hover:border-[#CBD5E1] hover:bg-[#F8FAFC]'
+            : 'w-fit max-w-[280px] gap-3 rounded-[8px] px-2 py-1.5 hover:bg-[#F1F5F9]'
         }`}
       >
         <span
@@ -98,10 +98,6 @@ export function ProfileMenu({
               <span className="block truncate text-sm font-bold leading-5 text-[#0F172A]">{name}</span>
               <span className="block truncate text-xs font-semibold leading-4 text-[#64748B]">{roleLabel}</span>
             </span>
-            <ChevronDown
-              className={`h-4 w-4 shrink-0 text-[#64748B] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-              aria-hidden="true"
-            />
           </>
         )}
       </button>

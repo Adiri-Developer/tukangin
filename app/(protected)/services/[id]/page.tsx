@@ -28,8 +28,8 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
 
   if (!category) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 flex items-center justify-center">
-        <div className="text-center p-8 bg-white border border-[#FCA5A5] rounded-[16px] shadow-sm max-w-md">
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="w-full max-w-md rounded-[16px] border border-[#FCA5A5] bg-white p-8 text-center shadow-sm">
           <div className="w-12 h-12 bg-red-50 text-[#B91C1C] rounded-full flex items-center justify-center mx-auto mb-4">
             <Search className="w-6 h-6" />
           </div>
@@ -70,8 +70,7 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 animate-in fade-in duration-300">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="mx-auto w-full max-w-4xl space-y-6 animate-in fade-in duration-300">
         <div className="flex items-center gap-4">
           <Link href="/services" className={buttonVariants({ variant: 'outline', className: 'border-[#E2E8F0] text-[#0F172A] rounded-[8px] hover:bg-slate-50 transition-colors h-11 px-4' })}>
             <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
@@ -158,7 +157,6 @@ export default async function CategoryProvidersPage({ params }: { params: Promis
             })}
           </div>
         )}
-      </div>
     </div>
   )
 }

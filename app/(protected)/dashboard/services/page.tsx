@@ -73,7 +73,7 @@ export default async function ProviderServicesPage({ searchParams }: ManagementP
   const hasFeedback = feedback.status === 'success' || feedback.status === 'error'
 
   return (
-    <div className="mx-auto max-w-[1200px] space-y-8 pb-12">
+    <div className="mx-auto w-full max-w-[1200px] space-y-8 pb-12">
       <header className="relative overflow-hidden rounded-[16px] border border-[#1E293B] bg-[#0F172A] px-6 py-7 text-white shadow-[0_4px_6px_-1px_rgba(15,23,42,0.08)] md:px-8 md:py-9">
         <div className="relative z-10 max-w-3xl">
           <p className="mb-2 text-sm font-semibold text-[#FFB693]">Etalase jasa mitra</p>

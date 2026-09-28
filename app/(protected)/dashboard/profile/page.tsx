@@ -18,7 +18,7 @@ export default async function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="p-8 text-center bg-[#FEF2F2] border border-[#FCA5A5] rounded-[16px]">
+      <div className="mx-auto max-w-2xl p-8 text-center bg-[#FEF2F2] border border-[#FCA5A5] rounded-[16px]">
         <p className="text-[#B91C1C] font-semibold mb-2">Sesi Tidak Valid / Akun Tidak Ditemukan</p>
         <p className="text-[#B91C1C]/80">Database baru saja di-reset. Akun lama Anda mungkin telah terhapus. Silakan klik tombol <b>Keluar Akun</b> di bagian bawah layar dan buat akun baru.</p>
       </div>
@@ -29,7 +29,7 @@ export default async function ProfilePage() {
   const profile = isProvider ? user.providerProfile : user.customerProfile
 
   return (
-    <div className="max-w-2xl space-y-8 animate-in fade-in duration-300">
+    <div className="mx-auto w-full max-w-2xl space-y-8 animate-in fade-in duration-300">
       <div>
         <h1 className="text-[28px] md:text-[36px] font-extrabold text-[#0F172A] tracking-tight mb-1">Profil Saya</h1>
         <p className="text-[#334155] text-lg">Kelola informasi data diri dan kontak Anda.</p>

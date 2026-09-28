@@ -35,8 +35,8 @@ export default async function BookingPage({
 
   if (!provider || !category) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 flex items-center justify-center">
-        <div className="text-center p-8 bg-white border border-[#FCA5A5] rounded-[16px] shadow-sm max-w-md">
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="w-full max-w-md rounded-[16px] border border-[#FCA5A5] bg-white p-8 text-center shadow-sm">
           <div className="w-12 h-12 bg-red-50 text-[#B91C1C] rounded-full flex items-center justify-center mx-auto mb-4">
             <Search className="w-6 h-6" />
           </div>
@@ -51,7 +51,7 @@ export default async function BookingPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 flex items-center justify-center animate-in fade-in zoom-in-95 duration-300">
+    <div className="mx-auto flex min-h-[60vh] w-full items-center justify-center animate-in fade-in zoom-in-95 duration-300">
       <Card className="w-full max-w-xl border-[#E2E8F0] rounded-[16px] shadow-[0_4px_6px_-1px_rgba(15,23,42,0.08)] bg-white overflow-hidden">
         <CardHeader className="bg-slate-50 border-b border-[#E2E8F0] px-6 py-6 text-center md:text-left">
           <CardTitle className="text-[24px] font-extrabold text-[#0F172A] tracking-tight">Formulir Pemesanan</CardTitle>

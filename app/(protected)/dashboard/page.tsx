@@ -20,7 +20,7 @@ export default async function DashboardPage() {
 
   if (!user) {
     return (
-      <div className="p-8 text-center bg-[#FEF2F2] border border-[#FCA5A5] rounded-[16px] shadow-sm">
+      <div className="mx-auto max-w-2xl p-8 text-center bg-[#FEF2F2] border border-[#FCA5A5] rounded-[16px] shadow-sm">
         <div className="flex justify-center mb-4"><AlertCircle className="w-12 h-12 text-[#B91C1C]" /></div>
         <p className="text-[#B91C1C] text-lg font-bold mb-2">Sesi Tidak Valid / Akun Tidak Ditemukan</p>
         <p className="text-[#B91C1C]/80">Database baru saja di-reset. Akun lama Anda mungkin telah terhapus. Silakan klik tombol <b>Keluar Akun</b> di bagian bawah layar dan buat akun baru.</p>
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
   const isProvider = user.role === 'PROVIDER'
 
   return (
-    <div className="max-w-4xl space-y-6 animate-in fade-in duration-300">
+    <div className="mx-auto w-full max-w-4xl space-y-6 animate-in fade-in duration-300">
       <div>
         <h1 className="text-[28px] md:text-[36px] font-extrabold text-[#0F172A] tracking-tight mb-1">Halo, {user.name}!</h1>
         <p className="text-[#334155] text-lg">Selamat datang di dashboard Tukangin.</p>

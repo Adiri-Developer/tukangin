@@ -15,8 +15,7 @@ export default async function ServicesPage() {
   const categories = await db.serviceCategory.findMany()
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 animate-in fade-in duration-300">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="mx-auto w-full max-w-[1200px] space-y-8 animate-in fade-in duration-300">
         <div>
           <h1 className="text-[28px] md:text-[36px] font-extrabold text-[#0F172A] tracking-tight">Kategori Layanan</h1>
           <p className="text-[16px] text-[#334155] mt-2">Pilih jenis layanan untuk mencari Mitra Tukang terpercaya.</p>
@@ -42,7 +41,6 @@ export default async function ServicesPage() {
             </Link>
           ))}
         </div>
-      </div>
     </div>
   )
 }

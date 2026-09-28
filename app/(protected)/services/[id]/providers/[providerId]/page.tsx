@@ -81,7 +81,7 @@ export default async function ProviderProfilePage({
   const providerName = provider.businessName || provider.user.name || 'Mitra Tukang'
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 pb-12">
+    <div className="mx-auto w-full max-w-6xl space-y-8 pb-12">
       <Link
         href={`/services/${category.id}`}
         className="inline-flex items-center gap-2 rounded-[8px] text-sm font-semibold text-[#334155] outline-none transition-colors hover:text-[#C2410C] focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-4"
