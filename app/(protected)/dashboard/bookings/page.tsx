@@ -6,14 +6,22 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createAgreement, payEscrow, completeWork, releaseEscrow } from '@/app/actions/booking'
 import { ReviewForm } from './review-form'
+import { CancellationAction } from './cancellation-action'
 import { AlertCircle, CalendarClock, MapPin, Wrench, Lock, CheckCircle2, ChevronRight, Check, Star } from 'lucide-react'
 
 export default async function BookingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ reviewStatus?: string; reviewMessage?: string }>
+  searchParams: Promise<{
+    reviewStatus?: string
+    reviewMessage?: string
+    bookingStatus?: string
+    bookingMessage?: string
+  }>
 }) {
-  const { reviewStatus, reviewMessage } = await searchParams
+  const { reviewStatus, reviewMessage, bookingStatus, bookingMessage } = await searchParams
+  const feedbackStatus = bookingStatus ?? reviewStatus
+  const feedbackMessage = bookingMessage ?? reviewMessage
   const session = await auth()
   if (!session?.user?.email) return null
 
@@ -53,16 +61,16 @@ export default async function BookingsPage({
         <p className="text-[#334155] text-lg">Riwayat layanan, persetujuan kerja, dan pembayaran Escrow.</p>
       </div>
 
-      {reviewMessage && (
+      {feedbackMessage && (
         <div
           role="status"
           className={`rounded-[12px] border px-4 py-3 text-sm font-semibold ${
-            reviewStatus === 'success'
+            feedbackStatus === 'success'
               ? 'border-[#6EE7B7] bg-[#ECFDF5] text-[#065F46]'
               : 'border-[#FCA5A5] bg-[#FEF2F2] text-[#991B1B]'
           }`}
         >
-          {reviewMessage}
+          {feedbackMessage}
         </div>
       )}
 
@@ -94,7 +102,15 @@ export default async function BookingsPage({
                   {booking.status === 'PENDING' && <div className="w-1.5 h-1.5 rounded-full bg-[#C2410C] animate-pulse" />}
                   {booking.status === 'IN_PROGRESS' && <div className="w-1.5 h-1.5 rounded-full bg-[#C026D3] animate-pulse" />}
                   {booking.status === 'COMPLETED' && <Check className="w-3 h-3" strokeWidth={3} />}
-                  {booking.status}
+                  {booking.status === 'PENDING'
+                    ? 'MENUNGGU'
+                    : booking.status === 'ACCEPTED'
+                      ? 'DITERIMA'
+                      : booking.status === 'IN_PROGRESS'
+                        ? 'DIKERJAKAN'
+                        : booking.status === 'COMPLETED'
+                          ? 'SELESAI'
+                          : 'DIBATALKAN'}
                 </span>
               </div>
               
@@ -136,18 +152,30 @@ export default async function BookingsPage({
 
                     {/* Escrow Payment Status */}
                     {booking.payment && (
-                      <div className="p-4 bg-[#ECFDF5] border border-[#6EE7B7] rounded-xl flex items-center justify-between">
+                      <div className={`flex items-center justify-between rounded-xl border p-4 ${
+                        booking.payment.status === 'REFUNDED'
+                          ? 'border-[#93C5FD] bg-[#EFF6FF]'
+                          : 'border-[#6EE7B7] bg-[#ECFDF5]'
+                      }`}>
                         <div>
-                          <p className="text-[11px] font-bold text-[#047857] uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                            <Lock className="w-3.5 h-3.5" /> Status Pembayaran
+                          <p className={`mb-1 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider ${
+                            booking.payment.status === 'REFUNDED' ? 'text-[#1D4ED8]' : 'text-[#047857]'
+                          }`}>
+                            <Lock className="h-3.5 w-3.5" /> Status Pembayaran
                           </p>
-                          <p className="text-sm font-bold text-[#065F46]">
-                            {booking.payment.status === 'HELD_IN_ESCROW' ? 'Dana Aman Ditahan Platform' : 'Dana Diteruskan ke Tukang'}
+                          <p className={`text-sm font-bold ${booking.payment.status === 'REFUNDED' ? 'text-[#1E3A8A]' : 'text-[#065F46]'}`}>
+                            {booking.payment.status === 'HELD_IN_ESCROW'
+                              ? 'Dana Aman Ditahan Platform'
+                              : booking.payment.status === 'REFUNDED'
+                                ? 'Dana Dikembalikan ke Customer'
+                                : booking.payment.status === 'RELEASED'
+                                  ? 'Dana Diteruskan ke Tukang'
+                                  : 'Menunggu Pembayaran'}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-xs text-[#047857] mb-0.5">Total Biaya</p>
-                          <p className="text-lg font-bold text-[#065F46] tabular-nums">Rp{(booking.payment.amount).toLocaleString('id-ID')}</p>
+                          <p className={`mb-0.5 text-xs ${booking.payment.status === 'REFUNDED' ? 'text-[#1D4ED8]' : 'text-[#047857]'}`}>Total Biaya</p>
+                          <p className={`text-lg font-bold tabular-nums ${booking.payment.status === 'REFUNDED' ? 'text-[#1E3A8A]' : 'text-[#065F46]'}`}>Rp{(booking.payment.amount).toLocaleString('id-ID')}</p>
                         </div>
                       </div>
                     )}
@@ -269,6 +297,47 @@ export default async function BookingsPage({
                       <ReviewForm
                         bookingId={booking.id}
                         providerName={booking.provider.name || 'mitra tukang'}
+                      />
+                    )}
+
+                    {booking.status === 'PENDING' && (
+                      <CancellationAction
+                        bookingId={booking.id}
+                        label={isProvider ? 'Tolak Pesanan' : 'Batalkan Pesanan'}
+                        pendingLabel={isProvider ? 'Menolak...' : 'Membatalkan...'}
+                        description={isProvider
+                          ? 'Tolak jika Anda tidak dapat menerima jadwal atau lingkup pekerjaan ini.'
+                          : 'Pesanan dapat dibatalkan sebelum mitra mengirim penawaran biaya.'}
+                        confirmation={isProvider
+                          ? 'Tolak pesanan ini? Customer akan melihat pesanan sebagai dibatalkan.'
+                          : 'Batalkan pesanan ini? Tindakan ini tidak dapat diurungkan.'}
+                      />
+                    )}
+
+                    {booking.status === 'ACCEPTED' && booking.agreement?.status === 'DRAFT' && (
+                      <CancellationAction
+                        bookingId={booking.id}
+                        label={isProvider ? 'Tarik Penawaran' : 'Tolak Penawaran'}
+                        pendingLabel="Memproses..."
+                        description={isProvider
+                          ? 'Penawaran akan ditandai ditarik dan pesanan tidak dapat dilanjutkan.'
+                          : 'Tolak jika rincian biaya belum sesuai. Belum ada dana yang dipotong.'}
+                        confirmation={isProvider
+                          ? 'Tarik penawaran dan batalkan pesanan ini?'
+                          : 'Tolak penawaran biaya dan batalkan pesanan ini?'}
+                      />
+                    )}
+
+                    {booking.status === 'IN_PROGRESS' && booking.payment?.status === 'HELD_IN_ESCROW' && (
+                      <CancellationAction
+                        bookingId={booking.id}
+                        label="Batalkan & Refund"
+                        pendingLabel="Mengembalikan dana..."
+                        description={isProvider
+                          ? 'Pembatalan akan menghentikan pekerjaan dan mengembalikan seluruh dana escrow kepada customer.'
+                          : 'Pembatalan akan menghentikan pekerjaan dan mengembalikan seluruh dana escrow Anda.'}
+                        confirmation="Batalkan pekerjaan dan kembalikan seluruh dana escrow? Tindakan ini tidak dapat diurungkan."
+                        refundsPayment
                       />
                     )}
                   </div>
