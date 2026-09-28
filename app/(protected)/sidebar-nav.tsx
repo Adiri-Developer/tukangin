@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
@@ -92,13 +93,16 @@ export function SidebarNav({ role, profile }: { role?: string; profile: ProfileS
       >
         <div className={`h-[72px] border-b border-[#E2E8F0] flex items-center shrink-0 ${isCollapsed ? 'justify-center px-0' : 'px-6 justify-between'}`}>
           {!isCollapsed && (
-            <Link href="/dashboard" className="text-2xl font-extrabold text-[#0F172A] tracking-tight truncate">
-              Tukang<span className="text-[#FF6B00]">Pro</span>
+            <Link href="/dashboard" aria-label="TukangIn" className="flex min-w-0 items-center gap-2.5 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00]">
+              <Image src="/logo_tukangin.png" alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
+              <span className="truncate text-xl font-extrabold tracking-[-0.03em] text-[#0F172A]">
+                Tukang<span className="text-[#FF6B00]">In</span>
+              </span>
             </Link>
           )}
           {isCollapsed && (
-            <Link href="/dashboard" className="text-xl font-extrabold text-[#FF6B00] tracking-tight">
-              T<span className="text-[#0F172A]">P</span>
+            <Link href="/dashboard" aria-label="Tukangin" className="flex items-center justify-center">
+              <Image src="/logo_tukangin.png" alt="Tukangin" width={42} height={42} className="h-[42px] w-[42px] object-contain" />
             </Link>
           )}
           <button 
@@ -134,8 +138,11 @@ export function SidebarNav({ role, profile }: { role?: string; profile: ProfileS
 
       {/* Mobile Header */}
       <header className="md:hidden sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E8F0] px-4 flex justify-between items-center h-[64px] shadow-sm shrink-0 w-full">
-        <Link href="/dashboard" className="font-extrabold text-[#0F172A] tracking-tight text-xl">
-          Tukang<span className="text-[#FF6B00]">Pro</span>
+        <Link href="/dashboard" aria-label="TukangIn" className="flex min-w-0 items-center gap-2 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00]">
+          <Image src="/logo_tukangin.png" alt="" width={36} height={36} className="h-9 w-9 shrink-0 object-contain" />
+          <span className="truncate text-lg font-extrabold tracking-[-0.03em] text-[#0F172A]">
+            Tukang<span className="text-[#FF6B00]">In</span>
+          </span>
         </Link>
         
         <div className="flex items-center gap-2">

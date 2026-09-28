@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, CheckCircle, Flame, User, Check, Star, Search, Calendar } from "lucide-react";
 
@@ -23,7 +24,7 @@ const TUKANG_DATA: Tukang[] = [
   { id: 4, name: "Hendra Bangun", category: "Renovasi", rating: 4.7, jobs: 56, price: 500000, verified: true, skills: ["Keramik", "Atap"] },
 ];
 
-const CATEGORIES = ["Semua", "Listrik", "AC", "Pipa & Air", "Renovasi"];
+// const CATEGORIES = ["Semua", "Listrik", "AC", "Pipa & Air", "Renovasi"];
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("Semua");
@@ -63,9 +64,12 @@ export default function Home() {
       {/* Navbar Sticky */}
       <header className={`fixed top-0 w-full z-50 transition-all duration-200 ${isScrolled ? "bg-slate-900 shadow-md py-3" : "bg-slate-900 py-4"}`}>
         <div className="max-w-[1200px] mx-auto px-4 md:px-6 flex items-center justify-between">
-          <div className="text-2xl font-extrabold text-white tracking-tight">
-            Tukang<span className="text-[#FF6B00]">In</span>
-          </div>
+          <Link href="/" className="flex shrink-0 items-center gap-2 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900">
+            <Image src="/logo_tukangin.png" alt="" width={40} height={40} className="h-9 w-9 object-contain sm:h-10 sm:w-10" preload />
+            <span className="text-xl font-extrabold tracking-[-0.03em] text-white sm:text-2xl">
+              Tukang<span className="text-[#FF6B00]">In</span>
+            </span>
+          </Link>
           <nav className="hidden md:flex gap-6">
             <Link href="#layanan" className="text-slate-300 hover:text-white transition-colors relative group">
               Layanan
@@ -132,7 +136,7 @@ export default function Home() {
 
       {/* Categories Grid overlapping Hero */}
       <section id="layanan" className="max-w-[1200px] mx-auto px-4 -mt-10 relative z-10 w-full">
-        <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x">
+        {/* <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x">
           {CATEGORIES.map(cat => {
             const isActive = activeCategory === cat;
             return (
@@ -149,7 +153,7 @@ export default function Home() {
               </button>
             )
           })}
-        </div>
+        </div> */}
       </section>
 
       {/* Tukang List */}
@@ -263,9 +267,12 @@ export default function Home() {
       <footer className="bg-slate-950 text-slate-400 py-12 px-4 border-t border-slate-800">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <div className="text-2xl font-extrabold text-white tracking-tight mb-4">
-              Tukang<span className="text-[#FF6B00]">In</span>
-            </div>
+            <Link href="/" className="mb-4 inline-flex items-center gap-2.5 rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
+              <Image src="/logo_tukangin.png" alt="" width={44} height={44} className="h-11 w-11 object-contain" />
+              <span className="text-2xl font-extrabold tracking-[-0.03em] text-white">
+                Tukang<span className="text-[#FF6B00]">In</span>
+              </span>
+            </Link>
             <p className="max-w-xs">Platform terpercaya menghubungkan Anda dengan teknisi ahli di sekitar Anda.</p>
           </div>
           <div>
@@ -287,7 +294,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-[1200px] mx-auto mt-12 pt-8 border-t border-slate-800 text-sm text-center">
-          &copy; {new Date().getFullYear()} Tukangin. Hak Cipta Dilindungi.
+          &copy; {new Date().getFullYear()} TukangIn. Hak Cipta Dilindungi.
         </div>
       </footer>
 

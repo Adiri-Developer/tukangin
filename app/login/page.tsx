@@ -2,9 +2,10 @@ import { authenticate } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card'
 import Link from 'next/link'
-import { LogIn, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
   return (
@@ -19,12 +20,9 @@ export default function LoginPage() {
 
       <Card className="w-full max-w-md border-[#E2E8F0] rounded-[16px] shadow-[0_4px_6px_-1px_rgba(15,23,42,0.08),0_2px_4px_-2px_rgba(15,23,42,0.04)] bg-white z-10 animate-in fade-in zoom-in-95 duration-300">
         <CardHeader className="space-y-2 pb-6 text-center">
-          <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-sm">
-            <LogIn className="w-6 h-6 text-[#FF6B00]" />
-          </div>
-          <CardTitle className="text-[28px] font-extrabold tracking-tight text-[#0F172A]">
-            Tukang<span className="text-[#FF6B00]">In</span>
-          </CardTitle>
+          <Link href="/" aria-label="Kembali ke beranda Tukangin" className="mx-auto mb-2 inline-flex rounded-[16px] focus-visible:ring-[#FF6B00]/40">
+            <Image src="/logo_tukangin.png" alt="Tukangin" width={80} height={80} className="h-20 w-20 object-contain" preload />
+          </Link>
           <CardDescription className="text-[#64748B] text-[16px]">
             Masuk untuk melanjutkan
           </CardDescription>
