@@ -1,5 +1,5 @@
 ---
-name: Tukang Pro Marketplace
+name: Tukangin Marketplace
 colors:
   surface: '#f8f9ff'
   surface-dim: '#cbdbf5'
@@ -277,7 +277,7 @@ Seluruh teks UI dalam Bahasa Indonesia. Gunakan data contoh realistis (nama
 tukang Indonesia, harga dalam Rupiah, format id-ID, angka pakai tabular-nums).
 
 STRUKTUR HALAMAN
-1. Navbar sticky navy: logo "TukangPro", link (Layanan, Mitra Tukang, Cara Kerja),
+1. Navbar sticky navy: logo "Tukangin", link (Layanan, Mitra Tukang, Cara Kerja),
    tombol ganti tema, CTA oranye "Pesan Sekarang".
 2. Hero navy: headline berisi kata kunci oranye, subteks, kotak pencarian (48px),
    dan chip kepercayaan (KTP & SKCK Verified, Garansi 14 Hari, jumlah pesanan berjalan).
